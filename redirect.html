@@ -2,11 +2,29 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Returning to App</title>
-  <!-- Automatically redirect to your app -->
-  <meta http-equiv="refresh" content="0;url=fitly://billing-portal-return">
+  <title>Redirecting...</title>
 </head>
 <body>
-  <p>If you are not redirected automatically, <a href="fitly://billing-portal-return">click here</a>.</p>
+  <p>If you are not redirected automatically, <a id="fallback-link" href="#">click here</a>.</p>
+
+  <script>
+    // Read the 'type' query parameter, e.g., ?type=success or ?type=cancel
+    const params = new URLSearchParams(window.location.search);
+    const redirectType = params.get('type') || 'portal-return';
+
+    // Set the deep link based on the type
+    let deepLink = 'fitly://billing-portal-return';
+    if (redirectType === 'success') {
+      deepLink = 'fitly://payment-success';
+    } else if (redirectType === 'cancel') {
+      deepLink = 'fitly://payment-cancel';
+    }
+
+    // Redirect immediately
+    window.location.replace(deepLink);
+
+    // Set fallback link in case auto-redirect fails
+    document.getElementById('fallback-link').setAttribute('href', deepLink);
+  </script>
 </body>
 </html>
